@@ -6,8 +6,10 @@ use App\Utilitaire\Vue_Composant;
 class Vue_ConsentementRGPD extends Vue_Composant
 {
     private string $msgErreur;
-    public function __construct(string $msgErreur ="")
+    private $utilisateur;
+    public function __construct($utilisateur, string $msgErreur ="")
     {
+        $this->utilisateur=$utilisateur;
         $this->msgErreur=$msgErreur;
     }
 
@@ -69,6 +71,13 @@ Rue la Transparence
 (NB : si vous n’avez pas de DPO, indiquez des coordonnées précises où exercer ces droits dans l’entreprise).
 
 Si vous estimez, après avoir contacté la société ABCD, que vos droits « Informatique et Libertés » ne sont pas respectés, vous pouvez adresser une réclamation en ligne à la CNIL.
+
+    <form action='index.php' method='post'>
+        <input type='hidden' name='case' value='Gerer_Rgpd'>
+        <input type='radio' name='accepterRGPD' value='1'>J'accepte
+        <input type='radio' name='accepterRGPD' value='0'>Je refuse
+        <button type='submit' name='action' value='validerRGPD'>Valider mon choix</button>
+    </form>
 
 ";
         //je crois avoir oublié la fin de la page...
