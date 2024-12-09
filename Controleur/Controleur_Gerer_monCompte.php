@@ -8,6 +8,7 @@ use App\Vue\Vue_Menu_Administration;
 use App\Vue\Vue_Structure_BasDePage;
 use App\Vue\Vue_Structure_Entete;
 use App\Vue\Vue_Utilisateur_Changement_MDP;
+use function App\Fonctions\CalculComplexiteMdp;
 
 
 switch ($action) {
@@ -26,10 +27,17 @@ switch ($action) {
             if ($_REQUEST["NouveauPassword"] == $_REQUEST["ConfirmPassword"]) {
                 $Vue->setEntete(new Vue_Structure_Entete());
                 $Vue->setMenu(new Vue_Menu_Administration($typeConnexion));
-                Modele_Utilisateur::Utilisateur_Modifier_motDePasse($_SESSION["idUtilisateur"], $_REQUEST["NouveauPassword"]);
-                $Vue->addToCorps(new Vue_Compte_Administration_Gerer("<label><b>Votre mot de passe a bien été modifié</b></label>"));
-                // Dans ce cas les mots de passe sont bons, il est donc modifier
+                $complexite = CalculComplexiteMdp($_REQUEST["NouveauPassword"]);
+                if($complexite < 90)
+                {
+                    $Vue->addToCorps(new Vue_Utilisateur_Changement_MDP("<label><b>Le mot de passe doit avoir une complexite d'au moins 90. Ici elle juste est de $complexite. Vous pouvez augmenter la longueur, le type de caractères (majuscule, miniscule, numérique, caractère spécial)</b></label>"));
 
+                }
+                else {
+                    Modele_Utilisateur::Utilisateur_Modifier_motDePasse($_SESSION["idUtilisateur"], $_REQUEST["NouveauPassword"]);
+                    $Vue->addToCorps(new Vue_Compte_Administration_Gerer("<label><b>Votre mot de passe a bien été modifié</b></label>"));
+                    // Dans ce cas les mots de passe sont bons, il est donc modifié
+                }
             } else {
                 $Vue->setEntete(new Vue_Structure_Entete());
                 $Vue->setMenu(new Vue_Menu_Administration($typeConnexion));

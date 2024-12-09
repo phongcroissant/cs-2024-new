@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 09 déc. 2024 à 13:48
--- Version du serveur : 10.4.28-MariaDB
--- Version de PHP : 8.2.4
+-- Généré le : lun. 09 déc. 2024 à 15:52
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -68,9 +68,10 @@ CREATE TABLE `categorie_utilisateur` (
 
 INSERT INTO `categorie_utilisateur` (`id`, `libelle`, `description`) VALUES
 (1, 'administrateur', 'administrateur du logiciel'),
-(2, 'cafe', 'utilisateur de l\'entreprise café pour gérer le catalogue et les ventes'),
+(2, 'gestionnaire café : catalogue', 'Gestionnaire du catalogue de l\'entreprise'),
 (3, 'entreprise cliente', 'entreprise cliente, pour administrer'),
-(4, 'salarie entreprise cliente', 'salarié pour traiter des commandes');
+(4, 'salarie entreprise cliente', 'salarié pour traiter des commandes'),
+(5, 'Commercial Café', 'Salarié gérant les ventes et la relation avec les entreprises clientes');
 
 -- --------------------------------------------------------
 
@@ -504,7 +505,7 @@ CREATE TABLE `utilisateur` (
 --
 
 INSERT INTO `utilisateur` (`idUtilisateur`, `login`, `motDePasse`, `idCategorie_utilisateur`, `desactiver`, `aAccepteRGPD`, `dateAcceptationRGPD`, `ipRGPD`) VALUES
-(18, 'root', 'secret', 1, 0, b'1', '2024-12-09', '127.0.0.1'),
+(18, 'root', 'Secret123456789*', 1, 0, b'1', '2024-12-09', '127.0.0.1'),
 (19, 'utilisateurcafe', 'secret', 2, 0, NULL, NULL, NULL),
 (671, 'contact@blogtags.com', 'secret', 3, 0, NULL, NULL, NULL),
 (672, 'contact@brainverse.com', 'secret', 3, 0, NULL, NULL, NULL),
@@ -605,7 +606,8 @@ INSERT INTO `utilisateur` (`idUtilisateur`, `login`, `motDePasse`, `idCategorie_
 (767, 'vendeur2@voondercom', '1234', 4, 0, NULL, NULL, NULL),
 (768, 'gerant@zoomboxcom', '1234', 4, 0, NULL, NULL, NULL),
 (769, 'vendeur1@zoomboxcom', '1234', 4, 0, NULL, NULL, NULL),
-(770, 'vendeur2@zoomboxcom', '1234', 4, 0, NULL, NULL, NULL);
+(770, 'vendeur2@zoomboxcom', '1234', 4, 0, NULL, NULL, NULL),
+(771, 'commercial café', 'secret', 5, 0, NULL, NULL, NULL);
 
 --
 -- Index pour les tables déchargées
@@ -693,7 +695,7 @@ ALTER TABLE `categorie`
 -- AUTO_INCREMENT pour la table `categorie_utilisateur`
 --
 ALTER TABLE `categorie_utilisateur`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT pour la table `commande`
@@ -729,7 +731,7 @@ ALTER TABLE `tva`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `idUtilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=771;
+  MODIFY `idUtilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=772;
 
 --
 -- Contraintes pour les tables déchargées
