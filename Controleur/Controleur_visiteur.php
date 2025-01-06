@@ -14,6 +14,7 @@ use App\Vue\Vue_Structure_Entete;
 use App\Vue\Vue_Utilisateur_Changement_MDPForce;
 use PHPMailer\PHPMailer\PHPMailer;
 use function App\Fonctions\CalculComplexiteMdp;
+use function App\Fonctions\envoyerMail;
 
 //Ce contrôleur gère le formulaire de connexion pour les visiteurs
 
@@ -37,8 +38,9 @@ switch ($action) {
                 $date = new DateTime();
                 $date->add(new DateInterval('PT1H'));
 
-                $token = \App\Modele\Modele_Token::(1, $utilisateur["idUtilisateur"], $date);
-                $msg="";
+                $token = \App\Modele\Modele_Token::Salarie_CreerToken(1, $utilisateur["idUtilisateur"], $date);
+                $msg="<h1>Renouvellement de votre mot de passe </h1>";
+                $msg.="Cliquez sur le lien suivant <a href='http://localhost:8080/index.php?action=reinitmdpToken&token=$token'>ici</a> pour renouveler votre mot de passe";
                 $resultat = envoyerMail("administration@cafe.local", "Administrateur café", $Utilisateur["login"], $Utilisateur["login"], "Réinitialisation de votre mot de passe", $msg);
 
 

@@ -92,7 +92,7 @@ function envoyerMail($mailFrom, $nomFrom, $mailTo, $nomTo, $sujet, $message) :in
     $mail->addAddress($mailTo, $nomTo);
     if ($mail->addReplyTo($mailFrom, $nomFrom)) {
         $mail->Subject = $sujet;
-        $mail->isHTML(false);
+        $mail->isHTML(true);
         $mail->Body = $message;
 
         if (!$mail->send()) {

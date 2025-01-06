@@ -22,7 +22,8 @@ class Modele_Token
         $requetePreparee->bindParam('paramcodeAction', $codeAction);
         $requetePreparee->bindParam('paramvaleur', $valeur);
         $requetePreparee->bindParam('paramidUtilisateur', $idUtilisateur);
-        $requetePreparee->bindParam('paramdateFin', $dateFin);
+        $dateFinString = $dateFin->format('Y-m-d H:i:s');
+        $requetePreparee->bindParam('paramdateFin', $dateFinString);
         $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
         if($reponse)
             return $valeur;
