@@ -8,6 +8,8 @@ use App\Vue\Vue_Structure_BasDePage;
 use App\Vue\Vue_Structure_Entete;
 use App\Vue\Vue_Utilisateur_Formulaire;
 use App\Vue\Vue_Utilisateur_Liste;
+use function App\Fonctions\envoyerMail;
+use function App\Fonctions\GenereMDP;
 
 $Vue->setEntete(new Vue_Structure_Entete());
 
@@ -39,11 +41,38 @@ switch ($action) {
     case "réinitialiserMDPUtilisateur":
         //Réinitialiser MDP sur la fiche de l'entreprise
         $Utilisateur = Modele_Utilisateur::Utilisateur_Select_ParId($_REQUEST["idUtilisateur"]);
-        Modele_Utilisateur::Utilisateur_Modifier_motDePasse($_REQUEST["idUtilisateur"], "secret"); //$Utilisateur["idUtilisateur"]
+        if(!filter_var($Utilisateur["login"], FILTER_VALIDATE_EMAIL)){
+            $listeNiveauAutorisation = Modele_categorie_utilisateur::categorie_utilisateur_Select();
+             $Vue->addToCorps(new Vue_Utilisateur_Formulaire(false, $listeNiveauAutorisation, $Utilisateur["idUtilisateur"], $Utilisateur["login"], $Utilisateur["idCategorie_utilisateur"]));
+            $Vue->addToCorps(new Vue_AfficherMessage("<br><label><b>Erreur : Vous ne pouvez pas réinitialiser le mot de passe tant que le login n'a pas la forme d'un mail</b></label>"));
 
-        $listeUtilisateur = Modele_Utilisateur:: Utilisateur_Select_Cafe();
-        $Vue->addToCorps(new Vue_Utilisateur_Liste($listeUtilisateur));
 
+        }
+        else {
+            $nouveauMdp = GenereMDP(12);
+            $resultat=envoyerMail("administration@cafe.local", "Administrateur café", $Utilisateur["login"],$Utilisateur["login"],  "Réinitialisation de votre mot de passe", "Votre nouveau mot de passe est : " . $nouveauMdp);
+
+            switch ($resultat)
+            {
+                case -1 :
+                    $listeNiveauAutorisation = Modele_categorie_utilisateur::categorie_utilisateur_Select();
+                    $Vue->addToCorps(new Vue_Utilisateur_Formulaire(false, $listeNiveauAutorisation, $Utilisateur["idUtilisateur"], $Utilisateur["login"], $Utilisateur["idCategorie_utilisateur"]));
+                    $Vue->addToCorps(new Vue_AfficherMessage("<br><label><b>Erreur : Le mail n'a pas pu être envoyé, erreurs de paramètres</b></label>"));
+                    break;
+                case 0 :
+                    $listeNiveauAutorisation = Modele_categorie_utilisateur::categorie_utilisateur_Select();
+                    $Vue->addToCorps(new Vue_Utilisateur_Formulaire(false, $listeNiveauAutorisation, $Utilisateur["idUtilisateur"], $Utilisateur["login"], $Utilisateur["idCategorie_utilisateur"]));
+                    $Vue->addToCorps(new Vue_AfficherMessage("<br><label><b>Erreur : Le mail n'a pas pu être envoyé, erreur indéterminée</b></label>"));
+                    break;
+                case 1 :
+                    Modele_Utilisateur::Utilisateur_Modifier_motDePasse($_REQUEST["idUtilisateur"], $nouveauMdp); //$Utilisateur["idUtilisateur"]
+                    Modele_Utilisateur::Utilisateur_DoitChangerMdp($_REQUEST["idUtilisateur"], 1);
+                    $listeUtilisateur = Modele_Utilisateur:: Utilisateur_Select_Cafe();
+                    $Vue->addToCorps(new Vue_Utilisateur_Liste($listeUtilisateur));
+                    $Vue->addToCorps(new Vue_AfficherMessage("<br><label><b>Mail envoyé</b></label>"));
+                    break;
+            }
+        }
         break;
     case "nouveau":
         //Nouveau sur la liste des utilisateurs

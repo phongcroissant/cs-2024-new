@@ -1,5 +1,7 @@
 <?php
 namespace App\Fonctions;
+    use PHPMailer\PHPMailer\PHPMailer;
+
     function Redirect_Self_URL():void{
         unset($_REQUEST);
         header("Location: ".$_SERVER['PHP_SELF']);
@@ -7,9 +9,14 @@ namespace App\Fonctions;
     }
 
 function GenereMDP($nbChar) :string{
-
-    return "secret";
-}
+        $chaine = "ABCDEFGHIJKLMONOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&é!?#";
+        srand((double)microtime() * random_int(1,1000000) * rand(1,1000000));
+        $pass = '';
+        for ($i = 0; $i < $nbChar; $i++) {
+            $pass .= $chaine[rand() % strlen($chaine)];
+        }
+        return $pass;
+    }
 
 function CalculComplexiteMdp($mdp) :int
 {
@@ -73,4 +80,28 @@ function CalculComplexiteMdp($mdp) :int
     return $calculComplexite;
 }
 
+function envoyerMail($mailFrom, $nomFrom, $mailTo, $nomTo, $sujet, $message) :int
+{
+    $mail = new PHPMailer;
+    $mail->isSMTP();
+    $mail->Host = '127.0.0.1';
+    $mail->Port = 1025; //Port non crypté
+    $mail->SMTPAuth = false; //Pas d’authentification
+    $mail->SMTPAutoTLS = false; //Pas de certificat TLS
+    $mail->setFrom($mailFrom, $nomFrom);
+    $mail->addAddress($mailTo, $nomTo);
+    if ($mail->addReplyTo($mailFrom, $nomFrom)) {
+        $mail->Subject = $sujet;
+        $mail->isHTML(false);
+        $mail->Body = $message;
 
+        if (!$mail->send()) {
+            $msg = 0; //erreur indéterminée
+        } else {
+            $msg = 1; //ok
+        }
+    } else {
+        $msg = -1;//erreur adresse mail
+    }
+    return $msg;
+}

@@ -201,6 +201,19 @@ SET motDePasse = :parammotDePasse ');
         return $reponse;
     }
 
+    public static function Utilisateur_DoitChangerMdp(int $idUtilisateur, int $valBool)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+        $requetePreparee = $connexionPDO->prepare('
+        UPDATE `utilisateur` 
+        SET `DoitChangerMotDePasse`= :paramdoitChangerMdp
+        WHERE idUtilisateur = :paramidUtilisateur');
+        $requetePreparee->bindParam('paramdoitChangerMdp', $valBool);
+        $requetePreparee->bindParam('paramidUtilisateur', $idUtilisateur);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        return $reponse;
+    }
+
     public static function Utilisateur_UpdateRgpd(int $idUtilisateur, int $accepterRGPD, string $ipRGPD)
     {
         $connexionPDO = Singleton_ConnexionPDO::getInstance();
