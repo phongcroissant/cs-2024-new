@@ -24,8 +24,30 @@ switch ($action) {
 
         //comme un qqc qui manque... je dis ça ! je dis rien !
 
-        $Vue->addToCorps(new Vue_Mail_Confirme());
+        if(!filter_var($_REQUEST["email"], FILTER_VALIDATE_EMAIL)){
+            $Vue->addToCorps(new Vue_Mail_ReinitMdp());
+            $Vue->addToCorps(new Vue_AfficherMessage("<br><label><b>Erreur : Vous devez saisir un mail valide</b></label>"));
 
+
+        }
+        else {
+            $utilisateur = Modele_Utilisateur::Utilisateur_Select_ParLogin($_REQUEST["email"]);
+            if($utilisateur) {
+                //calcul de la date dans une heure :
+                $date = new DateTime();
+                $date->add(new DateInterval('PT1H'));
+
+                $token = \App\Modele\Modele_Token::(1, $utilisateur["idUtilisateur"], $date);
+                $msg="";
+                $resultat = envoyerMail("administration@cafe.local", "Administrateur café", $Utilisateur["login"], $Utilisateur["login"], "Réinitialisation de votre mot de passe", $msg);
+
+
+                $Vue->addToCorps(new Vue_Mail_Confirme());
+            }
+            $Vue->addToCorps(new Vue_Mail_ReinitMdp());
+            $Vue->addToCorps(new Vue_AfficherMessage("<br><label><b>Si l'e-mail communiqué est valide, vous recevrez un lien pour renouveler votre mot de passe.</b></label>"));
+
+        }
         break;
     case "reinitmdp":
 

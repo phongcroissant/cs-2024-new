@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 06 jan. 2025 à 11:17
+-- Généré le : lun. 06 jan. 2025 à 13:23
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -467,6 +467,20 @@ INSERT INTO `salarie` (`idSalarie`, `nom`, `prenom`, `mail`, `idEntreprise`, `ro
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `token`
+--
+
+CREATE TABLE `token` (
+  `id` int(11) NOT NULL,
+  `valeur` text NOT NULL,
+  `codeAction` int(11) NOT NULL,
+  `idUtilisateur` int(11) NOT NULL,
+  `dateFin` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `tva`
 --
 
@@ -608,7 +622,7 @@ INSERT INTO `utilisateur` (`idUtilisateur`, `login`, `motDePasse`, `idCategorie_
 (768, 'gerant@zoomboxcom', '1234', 4, 0, NULL, NULL, NULL, b'0'),
 (769, 'vendeur1@zoomboxcom', '1234', 4, 0, NULL, NULL, NULL, b'0'),
 (770, 'vendeur2@zoomboxcom', '1234', 4, 0, NULL, NULL, NULL, b'0'),
-(771, 'commercialcafe@cafe.local', '9uslOc7zDdfZ', 5, 0, NULL, NULL, NULL, b'0');
+(771, 'commercialcafe@cafe.local', 'SuperSecret2015@', 5, 0, b'1', '2025-01-06', '127.0.0.1', b'1');
 
 --
 -- Index pour les tables déchargées
@@ -671,6 +685,12 @@ ALTER TABLE `salarie`
   ADD PRIMARY KEY (`idSalarie`);
 
 --
+-- Index pour la table `token`
+--
+ALTER TABLE `token`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Index pour la table `tva`
 --
 ALTER TABLE `tva`
@@ -721,6 +741,12 @@ ALTER TABLE `historique_etat_commande`
 --
 ALTER TABLE `produit`
   MODIFY `idProduit` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=254;
+
+--
+-- AUTO_INCREMENT pour la table `token`
+--
+ALTER TABLE `token`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `tva`
