@@ -3,6 +3,7 @@
 use App\Modele\Modele_Entreprise;
 use App\Modele\Modele_Salarie;
 use App\Modele\Modele_Utilisateur;
+use App\Vue\Vue_AfficherMessage;
 use App\Vue\Vue_Connexion_Formulaire_client;
 use App\Vue\Vue_ConsentementRGPD;
 use App\Vue\Vue_Mail_Confirme;
@@ -40,8 +41,8 @@ switch ($action) {
 
                 $token = \App\Modele\Modele_Token::Salarie_CreerToken(1, $utilisateur["idUtilisateur"], $date);
                 $msg="<h1>Renouvellement de votre mot de passe </h1>";
-                $msg.="Cliquez sur le lien suivant <a href='http://localhost:8080/index.php?action=reinitmdpToken&token=$token'>ici</a> pour renouveler votre mot de passe";
-                $resultat = envoyerMail("administration@cafe.local", "Administrateur café", $Utilisateur["login"], $Utilisateur["login"], "Réinitialisation de votre mot de passe", $msg);
+                $msg.="Cliquez sur le lien suivant <a href='http://localhost:8080/index.php?action=reinitmdpToken&token=".urlencode($token )."'>ici</a> pour renouveler votre mot de passe";
+                $resultat = envoyerMail("administration@cafe.local", "Administrateur café", $utilisateur["login"], $utilisateur["login"], "Réinitialisation de votre mot de passe", $msg);
 
 
                 $Vue->addToCorps(new Vue_Mail_Confirme());

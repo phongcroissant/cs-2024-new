@@ -31,4 +31,14 @@ class Modele_Token
             return false;
     }
 
+    public static function Token_Select(mixed $token)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+        $requetePreparee = $connexionPDO->prepare('SELECT * FROM `token` WHERE valeur = :paramtoken');
+        $requetePreparee->bindParam('paramtoken', $token);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        //error_log("Token_Select : " . $token);
+        //}
+        return $requetePreparee->fetch(PDO::FETCH_ASSOC);
+    }
 }

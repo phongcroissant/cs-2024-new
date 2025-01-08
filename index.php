@@ -3,6 +3,7 @@
 session_start();
 include_once "vendor/autoload.php";
 
+use App\Modele\Modele_Token;
 use App\Utilitaire\Vue;
 use App\Vue\Vue_AfficherMessage;
 use App\Vue\Vue_Connexion_Formulaire_client;
@@ -14,7 +15,7 @@ use App\Vue\Vue_Structure_Entete;
 
 
 $Vue = new Vue();
-
+$Vue->setEntete(new Vue_Structure_Entete());
 //Charge le gestionnaire de vue
 
 
@@ -44,7 +45,21 @@ else
 //error_log("action : " . $action);
 //utiliser en débuggage pour avoir le type de connexion
 //$Vue->addToCorps(new Vue_AfficherMessage("<br>Action $action<br>"));
-
+if(isset($_REQUEST["token"]))
+{
+    $token = $_REQUEST["token"];
+    $tokenBDD = Modele_Token::Token_Select($token);
+    if($tokenBDD !=null)
+    {
+        include "Controleur/Controleur_Gerer_Token.php";
+    }
+    else
+    {
+        $Vue->addToCorps(new Vue_AfficherMessage("Token : action non reconnue"));
+        $Vue->addToCorps(new Vue_Connexion_Formulaire_client());
+    }
+}
+else
 switch ($typeConnexion) {
     case "visiteur" :
         switch($case)
